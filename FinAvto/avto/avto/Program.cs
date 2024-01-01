@@ -1,18 +1,19 @@
 using System.Collections.Generic;
 
-class Program
+internal class Program
 {
     static void Main(string[] args)
     {
-      var avto1 = new Avto();
+        Console.WriteLine("Введите информацию о машине 1");
+        var avto1 = new Avto();
+        avto1.EnterInfo();
+        Console.WriteLine("Введите информацию  о машине 2 ");
         var avto2 = new Avto();
-        
-        List<Avto> avtos = new List<Avto>() {avto1, avto2};
-        //while (true)
-
+        avto2.EnterInfo();
+        List<Avto> avtos = new List<Avto>() { avto1, avto2 };
         while (true)
         {
-            Console.WriteLine("Выберите машину: 1 или 2 ");
+           Console.WriteLine("Выберите машину: 1 или 2 ");
             string g = Console.ReadLine();
             if (g == "1")
             {
@@ -23,7 +24,7 @@ class Program
                 avto2.Menu();
             }
         }
-        
+
     }
 }
 
