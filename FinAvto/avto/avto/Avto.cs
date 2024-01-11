@@ -18,10 +18,10 @@ class Avto
         Console.Write("Введите номер машины: ");
         NamberCar = Console.ReadLine();
         Console.Write("Введите максимальную вместимость топлива в бензобаке: ");
-          MaxBak = Convert.ToDouble(Console.ReadLine());
+        MaxBak = Convert.ToDouble(Console.ReadLine());
         Console.Write("текущее количество топлива в бензобаке: ");
         AmountFuel = Convert.ToDouble(Console.ReadLine());
-       /// AmountFuel = MaxBak;
+        /// AmountFuel = MaxBak;
         Console.Write("Введите расход топлива на 100км: ");
         FuelConsum = Convert.ToDouble(Console.ReadLine());
         if (AmountFuel > MaxBak) { Console.WriteLine("Ошибка. Текущее значение не может превышать максимальное"); return; }
@@ -32,90 +32,93 @@ class Avto
         Console.WriteLine($"Номер машины: {NamberCar}" +
             $"\nМаксимальная вместимость топлива в бензобаке: {MaxBak} л." +
             $"\nРасход топлива на 100км: {FuelConsum} л." +
-            $"\nТекущее количество топлива в бензобаке: {AmountFuel} л. ");
-        
+            $"\nТекущее количество топлива в бензобаке: {AmountFuel} л. " +
+            $"\nПробег: {mileage}");
+
     }
     // метод заправки
     void Zapravka()
     {
-             Console.Write("Сколько литров топлива вам понадобиться? Введите значение: ");
-            int a = Convert.ToInt32(Console.ReadLine());
-            if (a > MaxBak)
-            {
-                Console.WriteLine("Вы превысили лимит доступного значения, пожалуйста измените ваш выбор");
-                Zapravka();
-            }
-            else if (a + AmountFuel <= MaxBak && a > 0)
-            {
-                AmountFuel += a;
-                Console.Write($"\nБак полный");
-            }
-            else if (a + AmountFuel > MaxBak)
-            {
-                Console.WriteLine("\nКоличество топлива не может превысить максимальную вместимость");
-                Zapravka();
-            }
-            else if (AmountFuel > MaxBak)
-            {
-                Console.WriteLine("Ошибка");
-                Zapravka();
-            }
-            else
-            {
-                Console.WriteLine("\nОшибка введения значения, повторите попытку");
-                Zapravka();
-            }
+        Console.Write("Сколько литров топлива вам понадобиться? Введите значение: ");
+        int a = Convert.ToInt32(Console.ReadLine());
+        if (a > MaxBak)
+        {
+            Console.WriteLine("Вы превысили лимит доступного значения, пожалуйста измените ваш выбор");
+            Zapravka();
+        }
+        else if (a + AmountFuel <= MaxBak && a > 0)
+        {
+            AmountFuel += a;
+            Console.Write($"\nБак полный");
+        }
+        else if (a + AmountFuel > MaxBak)
+        {
+            Console.WriteLine("\nКоличество топлива не может превысить максимальную вместимость");
+            Zapravka();
+        }
+        else if (AmountFuel > MaxBak)
+        {
+            Console.WriteLine("Ошибка");
+            Zapravka();
+        }
+        else
+        {
+            Console.WriteLine("\nОшибка введения значения, повторите попытку");
+            Zapravka();
+        }
     }
     // метод езды
     void Move()
     {
-       Dist = Distation();
-        //double ost = MaxBak - AmountFuel; // остаток топлива
-        double ost = AmountFuel - top;
-        if (AmountFuel < top)
+        // Console.WriteLine("Ввидите расстояние: ");
+        // double dis = Convert.ToInt32(Console.ReadLine());
+        double dis = Distation();
+        double prob = dis;
+        double currendD = AmountFuel / (FuelConsum / 100); // сколько км  проехал
+        double Distt = Dist - currendD; // сколько км осталось проехать
+        while (true)
         {
-            double currendD = AmountFuel / (FuelConsum / 100); // сколько км  проехал 
-            double cur = currendD; // временная переменная для хранения currendD
-            while (AmountFuel < top)
+            double rem = Remains(dis);
+            if (rem <= AmountFuel)
             {
-              
-                double Distt = Dist - currendD; // сколько км осталось проехать
-                Console.WriteLine($" \nВы проехали {currendD} км, вам осталось {Distt} км. Нужно {top - AmountFuel}" +
+                AmountFuel -= rem;
+                corA = corB;
+                mileage += prob;
+                Console.WriteLine($"Вы проехали: {prob} км, топлива осталось: {AmountFuel} л, местоположение: {corA[0]},{corB[1]}");
+          
+                return;
+            }
+            else
+            {
+                
+                double cur = currendD; // временная переменная для хранения currendD
+                //double Distt = Dist - currendD; // сколько км осталось проехать
+                Console.WriteLine($" \nВы проехали {currendD} км, вам осталось {prob - currendD} км. Нужно {rem - AmountFuel}" +
                     $"\nЧтобы продолжить поездку заправьте машину ");
-                AmountFuel = 0;
-                Console.WriteLine("\nХотите заполнить бак? Да/ Нет?: ");
+
+                Console.Write("\nХотите заполнить бак? Да/ Нет?: ");
                 string ans = Console.ReadLine();
                 if (ans == "Да" || ans == "ДА" || ans == "да" || ans == "lf" || ans == "LF" || ans == "LF")
+
                 {
+                   
+                    dis -= AmountFuel / (FuelConsum / 100);
+                    AmountFuel = 0;
                     Zapravka();
+                     currendD = AmountFuel / (FuelConsum / 100); // сколько км  проехал
                     currendD += cur;
                     Distt = Dist - currendD;
-                    top -= AmountFuel;
-
                 }
-                else if (ans == "Нет" || ans == "НЕТ" || ans == "нет" || ans == "ytn" || ans == "Ytn" || ans == "YTN")
+                else
                 {
-                    Console.WriteLine("\nВы заглохли");
+                    Console.WriteLine("Вы заглохли");
                     return;
                 }
             }
-            while (AmountFuel > top)
-            {
-                ost = AmountFuel - top;
-                Console.WriteLine($"\nВы проехали {Dist} км, в баке осталось: {ost} л");
-                break;
-            }
-
         }
-      else if (MaxBak > top)
-      {
-           Console.WriteLine($"\nВы проехали {Dist} км, в баке осталось: {ost} л");
-      }
-         mileage = Math.Round(top * 100, 2) / FuelConsum; // формула пробега 
-         Console.WriteLine("\nПробег Машины: км");
-         Console.WriteLine(Math.Round(mileage, 2));
     }
-     //координаты
+
+    //координаты
     double Distation()
     {
         corB = new List<int>();
@@ -126,11 +129,17 @@ class Avto
             Math.Pow(corB[0] - corA[0], 2) +
             Math.Pow(corB[1] - corA[1], 2)
         );
-        top = (FuelConsum / 100) * Dist; // сколько топлива потребуется, чтобы прооехать дистанцию, которую задал пользователь
+        double top = (FuelConsum / 100) * Dist; // сколько топлива потребуется, чтобы прооехать дистанцию, которую задал пользователь
 
-        Console.Write("Дистанция равна: " + Dist + 
+        Console.Write("Дистанция равна: " + Dist +
             $" Чтобы проехать такую дистанцию вам понадобится {top} л. топлива"); ;
         return Dist;
+    }
+    // Метод остатка топлива 
+    double Remains(double dis)
+    {
+        double d = Math.Round(FuelConsum / 100 * dis, 2);
+        return d;
     }
     public void Menu()
     {
@@ -155,6 +164,7 @@ class Avto
         }
     }
 }
+
 
 
 
